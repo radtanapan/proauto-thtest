@@ -56,6 +56,38 @@ export interface DailySales {
   amount: number;
 }
 
+export interface MonthlyYOYData {
+  month: string;
+  previous: number;
+  current: number;
+}
+
+export interface YearlySales {
+  year: number;
+  sales: number;
+}
+
+export const yearlySalesData: YearlySales[] = [
+  { year: 2024, sales: 8500000 },
+  { year: 2025, sales: 9200000 },
+  { year: 2026, sales: 11050000 },
+];
+
+export const monthlyYOYData: MonthlyYOYData[] = [
+  { month: 'ม.ค.', previous: 680000, current: 750000 },
+  { month: 'ก.พ.', previous: 720000, current: 820000 },
+  { month: 'มี.ค.', previous: 780000, current: 950000 },
+  { month: 'เม.ย.', previous: 750000, current: 920000 },
+  { month: 'พ.ค.', previous: 800000, current: 980000 },
+  { month: 'มิ.ย.', previous: 820000, current: 1050000 },
+  { month: 'ก.ค.', previous: 780000, current: 960000 },
+  { month: 'ส.ค.', previous: 750000, current: 920000 },
+  { month: 'ก.ย.', previous: 790000, current: 980000 },
+  { month: 'ต.ค.', previous: 820000, current: 1020000 },
+  { month: 'พ.ย.', previous: 850000, current: 1080000 },
+  { month: 'ธ.ค.', previous: 880000, current: 1150000 },
+];
+
 export const customers: Customer[] = [
   { id: 'C001', name: 'สมชาย วงศ์สกุล', phone: '081-234-5678', email: 'somchai@email.com', vehicles: [{ id: 'V001', licensePlate: 'กก 1234', brand: 'Toyota', model: 'Camry', year: 2022, color: 'ขาว' }], createdAt: '2025-01-15' },
   { id: 'C002', name: 'สุดา แสงทอง', phone: '089-876-5432', email: 'suda@email.com', vehicles: [{ id: 'V002', licensePlate: 'ขข 5678', brand: 'Honda', model: 'Civic', year: 2023, color: 'ดำ' }], createdAt: '2025-02-10' },
