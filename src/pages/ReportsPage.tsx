@@ -1,7 +1,7 @@
 import { KPICard } from '@/components/KPICard';
 import { TrendingUp, Calendar, BarChart3, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { yearlySalesData, monthlyYOYData } from '@/data/mockData';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
+import { yearlySalesData, monthlyYOYData, dailySalesYOY } from '@/data/mockData';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend, AreaChart, Area } from 'recharts';
 
 export default function ReportsPage() {
   const currentYearSales = yearlySalesData[yearlySalesData.length - 1].sales;
@@ -152,6 +152,92 @@ export default function ReportsPage() {
             />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* 30-Day YOY Trend */}
+      <div className="rounded-lg border border-border bg-card p-5">
+        <h2 className="mb-1 text-base font-semibold text-card-foreground flex items-center gap-2">
+          <TrendingUp className="h-5 w-5" />
+          เปรียบเทียบยอดขายรายวัน 30 วันล่าสุด (YOY 2025 vs 2026)
+        </h2>
+        <p className="mb-4 text-xs text-muted-foreground">8 มี.ค. – 6 เม.ย.</p>
+        <ResponsiveContainer width="100%" height={280}>
+          <AreaChart data={dailySalesYOY} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+            <defs>
+              <linearGradient id="colorPrev" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(215, 20%, 65%)" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="hsl(215, 20%, 65%)" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorCurr" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(211, 66%, 32%)" stopOpacity={0.25} />
+                <stop offset="95%" stopColor="hsl(211, 66%, 32%)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 91%)" />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 10 }}
+              stroke="hsl(215, 10%, 52%)"
+              interval={4}
+            />
+            <YAxis
+              tick={{ fontSize: 11 }}
+              tickFormatter={(v: number) => `฿${(v / 1000).toFixed(0)}k`}
+              stroke="hsl(215, 10%, 52%)"
+            />
+            <Tooltip
+              formatter={(value: number, name: string) => [`฿${value.toLocaleString()}`, name]}
+              labelFormatter={(label: string) => `วันที่ ${label}`}
+            />
+            <Legend />
+            <Area
+              type="monotone"
+              dataKey="previous"
+              stroke="hsl(215, 20%, 65%)"
+              strokeWidth={1.5}
+              fill="url(#colorPrev)"
+              dot={false}
+              name="ปี 2025"
+            />
+            <Area
+              type="monotone"
+              dataKey="current"
+              stroke="hsl(211, 66%, 32%)"
+              strokeWidth={2.5}
+              fill="url(#colorCurr)"
+              dot={false}
+              name="ปี 2026"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+
+        {/* 30-day summary */}
+        {(() => {
+          const total2025 = dailySalesYOY.reduce((s, d) => s + d.previous, 0);
+          const total2026 = dailySalesYOY.reduce((s, d) => s + d.current, 0);
+          const diff = total2026 - total2025;
+          const pct = ((diff / total2025) * 100);
+          const isPos = diff >= 0;
+          return (
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <div className="rounded-lg bg-secondary/50 p-3">
+                <div className="text-xs text-muted-foreground mb-1">รวม 30 วัน (2025)</div>
+                <div className="text-sm font-semibold text-muted-foreground">฿{total2025.toLocaleString()}</div>
+              </div>
+              <div className="rounded-lg bg-secondary/50 p-3">
+                <div className="text-xs text-muted-foreground mb-1">รวม 30 วัน (2026)</div>
+                <div className="text-sm font-semibold text-foreground">฿{total2026.toLocaleString()}</div>
+              </div>
+              <div className="rounded-lg bg-secondary/50 p-3">
+                <div className="text-xs text-muted-foreground mb-1">การเติบโต YOY</div>
+                <div className={`flex items-center gap-1 text-sm font-semibold ${isPos ? 'text-green-600' : 'text-red-600'}`}>
+                  {isPos ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                  {isPos ? '+' : ''}{pct.toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* YOY by Month Table */}

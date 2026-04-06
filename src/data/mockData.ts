@@ -131,6 +131,28 @@ export const dailySales: DailySales[] = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
+export interface DailySalesYOY {
+  date: string;      // short label e.g. "8 มี.ค."
+  previous: number;  // same period last year (2025)
+  current: number;   // this year (2026)
+}
+
+const thaiMonthShort = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+// Deterministic seeded values for 30-day YoY comparison (March 8 – April 6)
+const dailyBase2025 = [18000, 22000, 15000, 25000, 30000, 28000, 12000, 20000, 24000, 27000, 19000, 23000, 31000, 26000, 17000, 21000, 29000, 33000, 14000, 22000, 25000, 28000, 18000, 24000, 32000, 27000, 16000, 23000, 35000, 29000];
+const dailyBase2026 = [21000, 25000, 18000, 28000, 34000, 31000, 14000, 23000, 27000, 30000, 22000, 26000, 35000, 29000, 20000, 24000, 33000, 38000, 16000, 25000, 28000, 32000, 20000, 27000, 36000, 31000, 19000, 26000, 40000, 33000];
+
+export const dailySalesYOY: DailySalesYOY[] = Array.from({ length: 30 }, (_, i) => {
+  const date = new Date(2026, 2, 8 + i); // March 8 to April 6
+  const label = `${date.getDate()} ${thaiMonthShort[date.getMonth()]}`;
+  return {
+    date: label,
+    previous: dailyBase2025[i],
+    current: dailyBase2026[i],
+  };
+});
+
 export const serviceTypeDistribution = [
   { name: 'ซ่อมเครื่องยนต์', value: 25, color: 'hsl(211, 66%, 32%)' },
   { name: 'เปลี่ยนน้ำมันเครื่อง', value: 20, color: 'hsl(38, 92%, 50%)' },
